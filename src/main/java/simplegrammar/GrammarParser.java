@@ -26,7 +26,7 @@ class GrammarParser {
         LF_TOKEN_VALUE_OUTPUT
     };
 
-    private final Grammar grammar;
+    private final Grammar target;
 
     private State state;
     private char ch;
@@ -37,8 +37,8 @@ class GrammarParser {
     private boolean outputValue;
     private Option option;
 
-    public GrammarParser() {
-        grammar = new Grammar();
+    public GrammarParser(Grammar target) {
+        this.target = target;
     }
 
     private void lfRule() throws GrammarParseException {
@@ -56,10 +56,10 @@ class GrammarParser {
         if (Character.isLetterOrDigit(ch) || ch == '_')
             nameBuilder.append(ch);
         else if (ch == ':') {
-            option = grammar.createOption(nameBuilder.toString());
+            option = target.createOption(nameBuilder.toString());
             state = LF_ELEMENT;
         } else if (ch == '+') {
-            option = grammar.createOption(nameBuilder.toString(), true);
+            option = target.createOption(nameBuilder.toString(), true);
             state = LF_COLON;
         } else if (Character.isWhitespace(ch)) {
             state = LF_RULE_OUTPUT;
@@ -71,10 +71,10 @@ class GrammarParser {
     private void lfRuleOutput() throws GrammarParseException {
 
         if (ch == ':') {
-            option = grammar.createOption(nameBuilder.toString());
+            option = target.createOption(nameBuilder.toString());
             state = LF_ELEMENT;
         } else if (ch == '+') {
-            option = grammar.createOption(nameBuilder.toString(), true);
+            option = target.createOption(nameBuilder.toString(), true);
             state = LF_COLON;
         } else if (!Character.isWhitespace(ch))
             throw new GrammarParseException(String.format("Unexpected character %c!", ch));
@@ -294,7 +294,7 @@ class GrammarParser {
 
     }
 
-    public Grammar parse(Reader source) throws IOException, GrammarParseException {
+    public void parse(Reader source) throws IOException, GrammarParseException {
 
         state = LF_RULE;
         int chInt = source.read();
@@ -343,7 +343,6 @@ class GrammarParser {
         if (state != LF_RULE)
             throw new GrammarParseException("Unexpected end of the input!");
 
-        return grammar;
     }
 
 }

@@ -18,10 +18,6 @@ import java.util.Map;
  */
 public class Grammar {
 
-    public static Grammar parse(Reader source) throws IOException, GrammarParseException {
-        return new GrammarParser().parse(source);
-    }
-
     private final Map<String, List<Option>> rules;
     private String rootRuleName;
     
@@ -52,8 +48,12 @@ public class Grammar {
     protected final Option createOption(String ruleName) {
         return createOption(ruleName, false);
     }
-    
-    public boolean hasRule(String name) {
+
+    protected final void append(Reader source) throws IOException, GrammarParseException {
+        new GrammarParser(this).parse(source);
+    }
+
+    public final boolean hasRule(String name) {
         return rules.containsKey(name);
     }
  
