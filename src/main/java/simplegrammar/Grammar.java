@@ -30,7 +30,7 @@ public class Grammar {
 
     private final Map<String, List<Option>> rules;
     private String rootRuleName;
-    
+
     public Grammar() {
         rules = new HashMap<>();
     }
@@ -50,7 +50,7 @@ public class Grammar {
 
         if (rootRuleName == null)
             rootRuleName = ruleName;
-        
+
         return option;
         
     }
@@ -198,11 +198,15 @@ public class Grammar {
         this.rootRuleName = rootRuleName;
     }
 
-    public SyntaxTreeNode parse(TokenStream tokens) throws GrammarException, ParseException {
-        return parse(tokens, false);
+    public SyntaxTreeNode parse(TokenStream tokens) throws ParseException, GrammarException {
+        return parse(tokens, rootRuleName, false);
+    }
+
+    public SyntaxTreeNode parse(TokenStream tokens, String rootRoleName) throws GrammarException, ParseException {
+        return parse(tokens, rootRoleName,false);
     }
     
-    public SyntaxTreeNode parse(TokenStream tokens, boolean outputTrace) throws GrammarException, ParseException {
+    public SyntaxTreeNode parse(TokenStream tokens, String rootRuleName, boolean outputTrace) throws GrammarException, ParseException {
         
         ElementStack elementStack = new ElementStack();
         OptionStack expansionStack = new OptionStack();
