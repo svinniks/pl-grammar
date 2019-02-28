@@ -15,37 +15,32 @@
 */
 package simplegrammar;
 
-/**
- *
- * @author s.vinniks
- */
-public class GenericToken implements Token {
+public abstract class Tokenizer {
 
-    private final String name;
-    private final String value;
+    public abstract boolean hasNext(int depth);
+    protected abstract Token doPeek(int depth);
+    protected abstract Token doRead();
     
-    public GenericToken(String name, String value) {
-        this.name = name;
-        this.value = value;
+    public final boolean hasNext() {
+        return hasNext(1);
     }
     
-    public GenericToken(String name) {
-        this(name, null);
-    }
-    
-    @Override
-    public String getName() {
-        return name;
+    public Token read() throws ParseException {
+
+        if (hasNext(1))
+            return doRead();
+        else
+            throw new ParseException("Attempt to read beyond token stream end!");
+
     }
 
-    @Override
-    public String getValue() {
-        return value;
-    }
-    
-    @Override
-    public String toString() {
-        return name + " \"" + value + "\"";
+    public final Token peek(int depth) throws ParseException {
+        
+        if (hasNext(depth))
+            return doPeek(depth);
+        else
+            throw new ParseException("Attempt to read beyond token stream end!");
+
     }
     
 }

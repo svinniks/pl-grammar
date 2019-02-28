@@ -19,21 +19,10 @@ package simplegrammar;
  *
  * @author s.vinniks
  */
-final class TokenStreamEnd implements Token {
+final class TokenStreamEnd extends Token {
 
-    @Override
-    public String getName() {
-        return null;
+    public TokenStreamEnd() {
+        super(null, null);
     }
 
-    @Override
-    public String getValue() {
-        return null;
-    }
-    
-    @Override
-    public String toString() {
-        return "end of the input";
-    }
-    
 }

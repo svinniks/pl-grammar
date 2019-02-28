@@ -18,12 +18,12 @@ package simplegrammar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayListTokenStream extends TokenStream {
+public class SimpleTokenizer extends Tokenizer {
 
     private final List<Token> tokens;
     private int position;
 
-    public ArrayListTokenStream() {
+    public SimpleTokenizer() {
         tokens = new ArrayList<>();
         position = -1;
     }
@@ -32,10 +32,10 @@ public class ArrayListTokenStream extends TokenStream {
         tokens.add(token);
     }
 
-    public void addAll(TokenStream tokenStream) throws ParseException {
+    public void addAll(Tokenizer tokenizer) throws ParseException {
 
-        while (tokenStream.hasNext())
-            addToken(tokenStream.read());
+        while (tokenizer.hasNext())
+            addToken(tokenizer.read());
 
     }
 

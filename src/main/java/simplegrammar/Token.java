@@ -19,7 +19,54 @@ package simplegrammar;
  *
  * @author s.vinniks
  */
-public interface Token {
-    public String getName();
-    public String getValue();
+public class Token {
+
+    private final String name;
+    private final String value;
+
+    private String source;
+    private Integer line;
+    private Integer position;
+    
+    public Token(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public Token(String name) {
+        this(name, null);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Integer getLine() {
+        return line;
+    }
+
+    public void setLine(Integer line) {
+        this.line = line;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
 }

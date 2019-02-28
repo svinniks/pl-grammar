@@ -198,15 +198,15 @@ public class Grammar {
         this.rootRuleName = rootRuleName;
     }
 
-    public SyntaxTreeNode parse(TokenStream tokens) throws ParseException, GrammarException {
+    public SyntaxTreeNode parse(Tokenizer tokens) throws ParseException, GrammarException {
         return parse(tokens, rootRuleName, false);
     }
 
-    public SyntaxTreeNode parse(TokenStream tokens, String rootRoleName) throws GrammarException, ParseException {
+    public SyntaxTreeNode parse(Tokenizer tokens, String rootRoleName) throws GrammarException, ParseException {
         return parse(tokens, rootRoleName,false);
     }
     
-    public SyntaxTreeNode parse(TokenStream tokens, String rootRuleName, boolean outputTrace) throws GrammarException, ParseException {
+    public SyntaxTreeNode parse(Tokenizer tokens, String rootRuleName, boolean outputTrace) throws GrammarException, ParseException {
         
         ElementStack elementStack = new ElementStack();
         OptionStack expansionStack = new OptionStack();
@@ -214,7 +214,7 @@ public class Grammar {
         List<Option> rootOptions = getOptions(rootRuleName);
         
         if (rootOptions.size() > 1)
-            throw new ParseException("Root rule \"" + rootRuleName + "\" has multiple options!");
+            throw new GrammarException("Root rule \"" + rootRuleName + "\" has multiple options!");
         
         SyntaxTreeNode syntaxTree = new SyntaxTreeNode(rootRuleName);
         
@@ -271,8 +271,8 @@ public class Grammar {
                         treeNodeStack.pop();
                         
                 } else
-                    throw new ParseException("Unexpected " + token.getName() + " \"" + token.getValue()+ "\"!");
-                
+                    throw new UnexpectedTokenException(token);
+
                 treeNodeStack.pop();
                 elementStack.pop();
                 
@@ -348,9 +348,9 @@ public class Grammar {
                         System.out.println();*/
                         
                         if (matchingExpansionStacks.isEmpty())
-                            
-                            throw new ParseException("Unexpected " + token.toString() + "!");
-                        
+
+                            throw new UnexpectedTokenException(token);
+
                         else if (matchingExpansionStacks.size() == 1) 
                             
                             while (!matchingExpansionStacks.get(0).empty())
@@ -378,8 +378,8 @@ public class Grammar {
         }
         
         if (tokens.hasNext())
-            throw new ParseException("Unexpected " + tokens.peek(1).getName() + " \"" + tokens.peek(1).getValue()+ "\"!");
-        
+            throw new UnexpectedTokenException(tokens.peek(1));
+
         if (!emptyPathExists(elementStack))
             throw new ParseException("Unexpected end of the input!");
         
