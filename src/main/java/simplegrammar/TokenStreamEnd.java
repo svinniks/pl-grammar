@@ -22,7 +22,7 @@ package simplegrammar;
 final class TokenStreamEnd extends Token {
 
     public TokenStreamEnd() {
-        super(null, null);
+        super(null);
     }
 
 }

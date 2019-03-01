@@ -39,6 +39,10 @@ public class PatternTokenizer extends SimpleTokenizer {
     }
 
     public void parse(CharSequence source) throws ParseException {
+        parse(source, 1, 1);
+    }
+
+    public void parse(CharSequence source, int startLine, int startPosition) throws ParseException {
 
         List<Matcher> matchers = new ArrayList<>();
 
@@ -46,6 +50,8 @@ public class PatternTokenizer extends SimpleTokenizer {
             matchers.add(tokenPattern.pattern.matcher(source));
 
         int position = 0;
+        int tokenLine = startLine;
+        int tokenPosition = startPosition;
 
         do {
 
@@ -83,14 +89,22 @@ public class PatternTokenizer extends SimpleTokenizer {
             }
 
             if (tokenName == null)
-                throw new ParseException("Unexpected input!");
+                throw new ParseException(String.format("Unexpected input at line %d, position %d!", tokenLine, tokenPosition));
 
-            Token token = new Token(tokenName, tokenValue);
+            Token token = new Token(tokenName);
+            token.setValue(tokenValue);
             token.setSource(tokenSource);
+            token.setLine(tokenLine);
+            token.setPosition(tokenPosition);
 
             addToken(token);
 
-            position += tokenSource.length();
+            for (int i = 1; i <= tokenSource.length(); i++)
+                if (source.charAt(position++) == '\n') {
+                    tokenLine++;
+                    tokenPosition = 1;
+                } else
+                    tokenPosition++;
 
         } while (position < source.length());
 

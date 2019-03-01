@@ -16,20 +16,30 @@
 package simplegrammar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SimpleTokenizer extends Tokenizer {
 
+    private final Set<String> ignoredTokens;
     private final List<Token> tokens;
     private int position;
 
     public SimpleTokenizer() {
+        ignoredTokens = new HashSet<>();
         tokens = new ArrayList<>();
         position = -1;
     }
 
+    public void ignoreTokens(String... tokens) {
+        for (String token : tokens)
+            ignoredTokens.add(token);
+    }
+
     public void addToken(Token token) {
-        tokens.add(token);
+        if (!ignoredTokens.contains(token.getName()))
+            tokens.add(token);
     }
 
     public void addAll(Tokenizer tokenizer) throws ParseException {
@@ -53,6 +63,10 @@ public class SimpleTokenizer extends Tokenizer {
     protected Token doRead() {
         position++;
         return doPeek(0);
+    }
+
+    public void reset() {
+        position = -1;
     }
 
 }

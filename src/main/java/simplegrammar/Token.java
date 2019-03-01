@@ -22,19 +22,14 @@ package simplegrammar;
 public class Token {
 
     private final String name;
-    private final String value;
+    private String value;
 
     private String source;
     private Integer line;
     private Integer position;
     
-    public Token(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
-
     public Token(String name) {
-        this(name, null);
+        this.name = name;
     }
 
     public String getName() {
@@ -43,6 +38,10 @@ public class Token {
 
     public String getValue() {
         return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getSource() {
