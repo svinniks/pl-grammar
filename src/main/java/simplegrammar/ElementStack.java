@@ -22,5 +22,10 @@ import java.util.Stack;
  * @author s.vinniks
  */
 public class ElementStack extends Stack<AbstractOptionElement> {
-    
+
+    public void pushOption(Option option) {
+        for (int i = option.getElements().size() - 1; i >= 0; i--)
+            push(option.getElements().get(i));
+    }
+
 }

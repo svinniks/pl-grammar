@@ -77,21 +77,15 @@ public class Grammar {
                             throw new GrammarException("Rule \"" + ((OptionRule) element).getName() + "\" does not exist!");
         
     }
-    
-    private void pushOption(ElementStack elementStack, Option option) {
-    
-        for (int i = option.getElements().size() - 1; i >= 0; i--)
-            elementStack.push(option.getElements().get(i));
-        
-    }
-    
-    private List<Option> getOptions(String ruleName) throws GrammarException {
-        
+
+    private void checkRule(String ruleName) throws GrammarException {
         if (!hasRule(ruleName))
             throw new GrammarException("Rule \"" + ruleName + "\" does not exist!");
-        
+    }
+
+    private List<Option> getOptions(String ruleName) throws GrammarException {
+        checkRule(ruleName);
         return rules.get(ruleName);
-        
     }
     
     private void findExpansionStacks(
@@ -137,7 +131,7 @@ public class Grammar {
                 for (Option option : options) {
                     
                     ElementStack innerElementStack = (ElementStack)elementStack.clone();
-                    pushOption(innerElementStack, option);
+                    innerElementStack.pushOption(option);
                     
                     expansionStack.push(option);
                     
@@ -207,22 +201,19 @@ public class Grammar {
     }
     
     public SyntaxTreeNode parse(Tokenizer tokens, String rootRuleName, boolean outputTrace) throws GrammarException, ParseException {
-        
-        ElementStack elementStack = new ElementStack();
-        OptionStack expansionStack = new OptionStack();
-        
-        List<Option> rootOptions = getOptions(rootRuleName);
-        
-        if (rootOptions.size() > 1)
-            throw new GrammarException("Root rule \"" + rootRuleName + "\" has multiple options!");
-        
+
+        checkRule(rootRuleName);
+
         SyntaxTreeNode syntaxTree = new SyntaxTreeNode(rootRuleName);
         
         SyntaxTreeNodeStack treeNodeStack = new SyntaxTreeNodeStack();
-        treeNodeStack.push(syntaxTree, rootOptions.get(0).getElementCount());
-        
-        pushOption(elementStack, rootOptions.get(0));
-        
+        treeNodeStack.push(syntaxTree);
+
+        ElementStack elementStack = new ElementStack();
+        elementStack.push(new OptionRule(rootRuleName, false));
+
+        OptionStack expansionStack = new OptionStack();
+
         while (!elementStack.empty() && tokens.hasNext()) {
             
             if (outputTrace) {
@@ -291,7 +282,7 @@ public class Grammar {
                     treeNodeStack.push(parentNode, option.getElementCount());
                     
                     elementStack.pop();
-                    pushOption(elementStack, option);
+                    elementStack.pushOption(option);
                     
                 } else {
                     
