@@ -15,10 +15,6 @@
 */
 package simplegrammar;
 
-/**
- *
- * @author s.vinniks
- */
 public abstract class AbstractOptionElement {
     
 }

@@ -42,11 +42,9 @@ public class SimpleTokenizer extends Tokenizer {
             tokens.add(token);
     }
 
-    public void addAll(Tokenizer tokenizer) throws ParseException {
-
+    public void addAll(Tokenizer tokenizer) {
         while (tokenizer.hasNext())
-            addToken(tokenizer.read());
-
+            addToken(tokenizer.get());
     }
 
     @Override
@@ -60,7 +58,7 @@ public class SimpleTokenizer extends Tokenizer {
     }
 
     @Override
-    protected Token doRead() {
+    protected Token doGet() {
         position++;
         return doPeek(0);
     }

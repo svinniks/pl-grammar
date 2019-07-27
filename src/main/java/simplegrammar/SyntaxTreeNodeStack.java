@@ -17,10 +17,6 @@ package simplegrammar;
 
 import java.util.Stack;
 
-/**
- *
- * @author s.vinniks
- */
 public class SyntaxTreeNodeStack extends Stack<SyntaxTreeNode>{
     
     public void push(SyntaxTreeNode node, int count) {

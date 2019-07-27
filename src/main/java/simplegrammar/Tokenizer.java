@@ -19,28 +19,24 @@ public abstract class Tokenizer {
 
     public abstract boolean hasNext(int depth);
     protected abstract Token doPeek(int depth);
-    protected abstract Token doRead();
+    protected abstract Token doGet();
     
     public final boolean hasNext() {
         return hasNext(1);
     }
     
-    public Token read() throws ParseException {
-
+    public Token get() {
         if (hasNext(1))
-            return doRead();
+            return doGet();
         else
-            throw new ParseException("Attempt to read beyond token stream end!");
-
+            return new TokenStreamEnd();
     }
 
-    public final Token peek(int depth) throws ParseException {
-        
+    public final Token peek(int depth) {
         if (hasNext(depth))
             return doPeek(depth);
         else
-            throw new ParseException("Attempt to read beyond token stream end!");
-
+            return new TokenStreamEnd();
     }
     
 }

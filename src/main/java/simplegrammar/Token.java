@@ -15,10 +15,6 @@
 */
 package simplegrammar;
 
-/**
- *
- * @author s.vinniks
- */
 public class Token {
 
     private final String name;

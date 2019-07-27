@@ -22,10 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author s.vinniks
- */
 public class Grammar {
 
     private final Map<String, List<Option>> rules;
@@ -158,31 +154,6 @@ public class Grammar {
         }
         
     }
-    
-    private boolean emptyPathExists(List<AbstractOptionElement> optionElements) {
-        
-        for (AbstractOptionElement element : optionElements)
-            if (element instanceof OptionToken)
-                return false;
-            else if (element instanceof OptionRule) {
-                
-                OptionRule optionRule = (OptionRule)element;
-                boolean emptySubpathExists = false;
-                
-                for (Option option : rules.get(optionRule.getName()))
-                    if (emptyPathExists(option.getElements())) {
-                        emptySubpathExists = true;
-                        break;
-                    }
-                
-                if (!emptySubpathExists)
-                    return false;
-                
-            }
-        
-        return true;
-        
-    }
 
     public String getRootRuleName() {
         return rootRuleName;
@@ -199,7 +170,29 @@ public class Grammar {
     public SyntaxTreeNode parse(Tokenizer tokens, String rootRoleName) throws GrammarException, ParseException {
         return parse(tokens, rootRoleName,false);
     }
-    
+
+    private void outputTrace(ElementStack elementStack, Tokenizer tokens) {
+
+        System.out.println(tokens.peek(1).getName() + ":" + tokens.peek(1).getValue() + " - ");
+
+        for (AbstractOptionElement element : elementStack) {
+
+            if (element instanceof OptionToken) {
+                OptionToken token = (OptionToken)element;
+                System.out.print(token.getName() + ":" + token.getValue());
+            } else if (element instanceof OptionRule) {
+                OptionRule token = (OptionRule)element;
+                System.out.print("{" + token.getName()+"}");
+            } else {
+                System.out.print(element.getClass().getName());
+            }
+            System.out.print("  ");
+        }
+
+        System.out.println();
+
+    }
+
     public SyntaxTreeNode parse(Tokenizer tokens, String rootRuleName, boolean outputTrace) throws GrammarException, ParseException {
 
         checkRule(rootRuleName);
@@ -214,29 +207,10 @@ public class Grammar {
 
         OptionStack expansionStack = new OptionStack();
 
-        while (!elementStack.empty() && tokens.hasNext()) {
+        while (!elementStack.empty()) {
             
-            if (outputTrace) {
-            
-                System.out.println(tokens.peek(1).getName() + ":" + tokens.peek(1).getValue() + " - ");
-
-                for (AbstractOptionElement element : elementStack) {
-
-                    if (element instanceof OptionToken) {
-                        OptionToken token = (OptionToken)element;
-                        System.out.print(token.getName()+":"+token.getValue());
-                    } else if (element instanceof OptionRule) {
-                        OptionRule token = (OptionRule)element;
-                        System.out.print("{" + token.getName()+"}");
-                    } else {
-                        System.out.print(element.getClass().getName());
-                    }
-                    System.out.print("  ");
-                }
-
-                System.out.println(); 
-                
-            }
+            if (outputTrace)
+                outputTrace(elementStack, tokens);
             
             AbstractOptionElement element = elementStack.peek();
             
@@ -247,7 +221,7 @@ public class Grammar {
                 
             } else if (element instanceof OptionToken) {
                 
-                Token token = tokens.read();
+                Token token = tokens.get();
                 OptionToken optionToken = (OptionToken)element;
                 
                 if (optionToken.matches(token)) {
@@ -315,42 +289,19 @@ public class Grammar {
                                     matchingExpansionStacks
                             );
 
-                        /*System.out.println(token.toString());
-                        System.out.println("------------------------------------------------");
-                        int i = 0;
-                        for (ElementStack stack : matchingElementStacks) {
-                            System.out.print(++i);
-                            System.out.print(' ');
-                            for (AbstractOptionElement e : stack) {
-                                if (e instanceof OptionToken) {
-                                    OptionToken t = (OptionToken)e;
-                                    System.out.print(t.getName()+":"+t.getValue());
-                                } else if (e instanceof OptionRule) {
-                                    OptionRule r = (OptionRule)e;
-                                    System.out.print("{" + r.getName()+"}");
-                                } else {
-                                    System.out.print(e.getClass().getName());
-                                }
-                                System.out.print("  ");
-                            }
-                            System.out.println();
-                        }
-                        
-                        System.out.println();*/
-                        
-                        if (matchingExpansionStacks.isEmpty())
+                        if (matchingExpansionStacks.size() == 0)
 
                             throw new UnexpectedTokenException(token);
 
-                        else if (matchingExpansionStacks.size() == 1) 
-                            
+                        else if (matchingExpansionStacks.size() == 1)
+
                             while (!matchingExpansionStacks.get(0).empty())
                                 expansionStack.push(matchingExpansionStacks.get(0).pop());
-                        
+
                         else if (token instanceof TokenStreamEnd)
 
-                            throw new ParseException("Unexpected end of the input!");
-                            
+                            throw new UnexpectedTokenException(token);
+
                         else {
                             
                             peekDepth++;
@@ -368,12 +319,9 @@ public class Grammar {
             
         }
         
-        if (tokens.hasNext())
+        if (!(tokens.get() instanceof TokenStreamEnd))
             throw new UnexpectedTokenException(tokens.peek(1));
 
-        if (!emptyPathExists(elementStack))
-            throw new ParseException("Unexpected end of the input!");
-        
         return syntaxTree;
         
     }

@@ -38,4 +38,8 @@ public class UnexpectedTokenException extends ParseException {
         this.token = token;
     }
 
+    public Token getToken() {
+        return token;
+    }
+
 }

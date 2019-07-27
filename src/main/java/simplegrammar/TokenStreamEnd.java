@@ -15,14 +15,10 @@
 */
 package simplegrammar;
 
-/**
- *
- * @author s.vinniks
- */
 final class TokenStreamEnd extends Token {
 
     public TokenStreamEnd() {
-        super(null);
+        super("end of the input");
     }
 
 }

@@ -18,10 +18,6 @@ package simplegrammar;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author s.vinniks
- */
 public class SyntaxTreeNode {
     
     private final String value;

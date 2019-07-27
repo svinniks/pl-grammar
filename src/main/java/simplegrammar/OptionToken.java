@@ -15,10 +15,6 @@
 */
 package simplegrammar;
 
-/**
- *
- * @author s.vinniks
- */
 public class OptionToken extends AbstractOptionElement {
     
     public static enum Match {NONE, ANY, NAME, VALUE};

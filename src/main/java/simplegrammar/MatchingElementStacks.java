@@ -19,10 +19,6 @@ import simplegrammar.OptionToken.Match;
 
 import java.util.ArrayList;
 
-/**
- *
- * @author s.vinniks
- */
 public class MatchingElementStacks extends ArrayList<ElementStack> {
     
     private Match bestMatch;

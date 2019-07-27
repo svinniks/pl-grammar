@@ -17,10 +17,6 @@ package simplegrammar;
 
 import java.util.Stack;
 
-/**
- *
- * @author s.vinniks
- */
 public class OptionStack extends Stack<Option> {
     
 }

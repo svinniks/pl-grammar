@@ -18,10 +18,6 @@ package simplegrammar;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author s.vinniks
- */
 public class Option {
    
     private final Grammar grammar;

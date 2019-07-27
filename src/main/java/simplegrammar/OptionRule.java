@@ -15,10 +15,6 @@
 */
 package simplegrammar;
 
-/**
- *
- * @author s.vinniks
- */
 public class OptionRule extends AbstractOptionElement {
     
     private final String name;
@@ -36,7 +32,5 @@ public class OptionRule extends AbstractOptionElement {
     public Boolean getOutput() {
         return output;
     }
-    
-    
-    
+
 }
